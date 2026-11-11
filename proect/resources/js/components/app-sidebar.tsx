@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, HandHeart, LayoutGrid } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,7 +15,6 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index as donationsIndex } from '@/routes/donations';
 import type { NavItem } from '@/types';
 
 export function AppSidebar() {
@@ -30,15 +29,6 @@ export function AppSidebar() {
             href: dashboardUrl,
             icon: LayoutGrid,
         },
-        ...(page.props.canViewDonations && page.props.currentTeam
-            ? [
-                  {
-                      title: 'Dons',
-                      href: donationsIndex(page.props.currentTeam.slug),
-                      icon: HandHeart,
-                  },
-              ]
-            : []),
     ];
 
     const footerNavItems: NavItem[] = [

@@ -26,18 +26,4 @@ return [
 
     'infoline' => ['07 77 39 07 37', '07 79 17 79 48', '07 59 77 68 46'],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Administrateurs
-    |--------------------------------------------------------------------------
-    |
-    | Adresses email (séparées par des virgules) autorisées à voir les dons.
-    |
-    */
-
-    'admin_emails' => array_values(array_filter(array_map(
-        'trim',
-        explode(',', (string) env('ELEEO_ADMIN_EMAILS', '')),
-    ))),
-
 ];

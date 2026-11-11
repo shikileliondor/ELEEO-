@@ -1,21 +1,14 @@
-import { Form, Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import {
-    Banknote,
     CalendarDays,
     CarTaxiFront,
     Copy,
     HandHeart,
     MapPin,
     Phone,
-    ShieldCheck,
-    User,
 } from 'lucide-react';
-import { useState } from 'react';
 import { toast } from 'sonner';
-import { store } from '@/actions/App/Http/Controllers/DonationController';
-import InputError from '@/components/input-error';
 import Reveal from '@/components/reveal';
-import { cn } from '@/lib/utils';
 
 type Props = {
     event: {
@@ -30,8 +23,6 @@ type Props = {
     };
 };
 
-const quickAmounts = [1000, 2000, 5000, 10000, 25000, 50000];
-
 // Laisse le temps à l'écran de chargement de disparaître.
 const heroDelay = 700;
 
@@ -45,17 +36,7 @@ const mapDirectionsUrl =
 const yangoRideUrl =
     'https://yango.com/adj/yango?end-lon=-4.08343&end-lat=5.43298';
 
-const formatAmount = (amount: number) =>
-    new Intl.NumberFormat('fr-FR').format(amount);
-
-const fieldClass =
-    'w-full rounded-2xl border border-neutral-200 bg-neutral-50/60 py-3.5 pr-4 pl-11 text-base text-neutral-900 sm:text-sm outline-none transition placeholder:text-neutral-400 focus:border-eleeo-teal focus:bg-white focus:ring-4 focus:ring-eleeo-teal/10';
-
-const labelClass = 'mb-2 block text-sm font-medium text-neutral-800';
-
 export default function Welcome({ event, paymentLinks }: Props) {
-    const [amount, setAmount] = useState('');
-
     const eventDate = new Date(`${event.date}T00:00:00`);
     const daysLeft = Math.ceil(
         (eventDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
@@ -355,20 +336,20 @@ export default function Welcome({ event, paymentLinks }: Props) {
                 {/* Faire un don */}
                 <section
                     id="don"
-                    className="mx-auto grid max-w-6xl scroll-mt-6 items-start gap-10 px-4 pb-24 sm:px-6 lg:grid-cols-[1fr_1.15fr]"
+                    className="mx-auto max-w-6xl scroll-mt-6 px-4 pb-24 sm:px-6"
                 >
-                    <div>
-                        <Reveal>
-                            <p className="text-xs font-semibold tracking-wide text-eleeo-orange uppercase">
-                                Comment donner
-                            </p>
-                            <h2 className="mt-2 font-serif text-3xl font-semibold sm:text-4xl">
-                                En deux minutes, depuis votre téléphone
-                            </h2>
-                        </Reveal>
+                    <Reveal className="mb-10 max-w-xl">
+                        <p className="text-xs font-semibold tracking-wide text-eleeo-orange uppercase">
+                            Comment donner
+                        </p>
+                        <h2 className="mt-2 font-serif text-3xl font-semibold sm:text-4xl">
+                            En deux minutes, depuis votre téléphone
+                        </h2>
+                    </Reveal>
 
+                    <div className="grid items-center gap-10 lg:grid-cols-2">
                         <Reveal delay={150}>
-                            <div className="mt-8 rounded-3xl bg-gradient-to-br from-eleeo-navy to-eleeo-teal p-6 text-white shadow-xl">
+                            <div className="rounded-3xl bg-gradient-to-br from-eleeo-navy to-eleeo-teal p-6 text-white shadow-xl">
                                 <p className="text-sm text-white/80">
                                     Numéro de contribution
                                 </p>
@@ -419,10 +400,9 @@ export default function Welcome({ event, paymentLinks }: Props) {
                             </div>
                         </Reveal>
 
-                        <div className="mt-8 space-y-5">
+                        <div className="space-y-5">
                             {[
                                 'Payez avec Wave, ou écrivez-nous sur WhatsApp pour Orange Money.',
-                                'Remplissez le formulaire pour que l’équipe puisse vous remercier.',
                                 `Le ${formattedDate}, votre don devient repas et sourires pour ceux qui en ont besoin.`,
                             ].map((step, index) => (
                                 <Reveal key={step} delay={250 + index * 120}>
@@ -436,205 +416,6 @@ export default function Welcome({ event, paymentLinks }: Props) {
                                     </div>
                                 </Reveal>
                             ))}
-                        </div>
-                    </div>
-
-                    {/* Formulaire (sans animation d'apparition) */}
-                    <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 shadow-neutral-300/40 ring-neutral-100">
-                        <div className="h-1.5 bg-gradient-to-r from-eleeo-orange via-eleeo-yellow to-eleeo-teal" />
-                        <div className="p-5 sm:p-9">
-                            <div className="flex items-start gap-4">
-                                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-eleeo-orange/10 text-eleeo-orange">
-                                    <HandHeart className="size-6" />
-                                </span>
-                                <div>
-                                    <h3 className="font-serif text-2xl font-semibold">
-                                        J’ai fait un don
-                                    </h3>
-                                    <p className="mt-1 text-sm text-neutral-500">
-                                        Après votre paiement, laissez-nous vos
-                                        coordonnées.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <Form
-                                {...store.form()}
-                                resetOnSuccess
-                                onSuccess={() => setAmount('')}
-                                className="mt-8 space-y-6"
-                            >
-                                {({ errors, processing }) => (
-                                    <>
-                                        <div className="grid gap-5 sm:grid-cols-2">
-                                            <div>
-                                                <label
-                                                    htmlFor="donor_name"
-                                                    className={labelClass}
-                                                >
-                                                    Nom complet
-                                                </label>
-                                                <div className="relative">
-                                                    <User className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-neutral-400" />
-                                                    <input
-                                                        id="donor_name"
-                                                        name="donor_name"
-                                                        required
-                                                        autoComplete="name"
-                                                        className={fieldClass}
-                                                        placeholder="Ex. Morel Effobi"
-                                                    />
-                                                </div>
-                                                <InputError
-                                                    message={errors.donor_name}
-                                                    className="mt-1.5"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label
-                                                    htmlFor="phone"
-                                                    className={labelClass}
-                                                >
-                                                    Téléphone
-                                                </label>
-                                                <div className="relative">
-                                                    <Phone className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-neutral-400" />
-                                                    <input
-                                                        id="phone"
-                                                        name="phone"
-                                                        type="tel"
-                                                        required
-                                                        autoComplete="tel"
-                                                        className={fieldClass}
-                                                        placeholder="07 00 00 00 00"
-                                                    />
-                                                </div>
-                                                <InputError
-                                                    message={errors.phone}
-                                                    className="mt-1.5"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label
-                                                htmlFor="amount"
-                                                className={labelClass}
-                                            >
-                                                Montant envoyé
-                                            </label>
-                                            <div className="mb-3 grid grid-cols-3 gap-2">
-                                                {quickAmounts.map((value) => {
-                                                    const selected =
-                                                        amount ===
-                                                        String(value);
-
-                                                    return (
-                                                        <button
-                                                            key={value}
-                                                            type="button"
-                                                            onClick={() =>
-                                                                setAmount(
-                                                                    String(
-                                                                        value,
-                                                                    ),
-                                                                )
-                                                            }
-                                                            aria-pressed={
-                                                                selected
-                                                            }
-                                                            className={`rounded-2xl border py-3 text-sm font-semibold transition ${
-                                                                selected
-                                                                    ? 'border-eleeo-orange bg-eleeo-orange text-white shadow-md shadow-eleeo-orange/25'
-                                                                    : 'border-neutral-200 bg-white text-neutral-700 hover:border-eleeo-orange/60 hover:text-eleeo-orange'
-                                                            }`}
-                                                        >
-                                                            {formatAmount(
-                                                                value,
-                                                            )}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="relative">
-                                                <Banknote className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-neutral-400" />
-                                                <input
-                                                    id="amount"
-                                                    name="amount"
-                                                    type="number"
-                                                    inputMode="numeric"
-                                                    min={100}
-                                                    required
-                                                    value={amount}
-                                                    onChange={(e) =>
-                                                        setAmount(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className={`${fieldClass} pr-16`}
-                                                    placeholder="Autre montant"
-                                                />
-                                                <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-xs font-semibold text-neutral-400">
-                                                    FCFA
-                                                </span>
-                                            </div>
-                                            <InputError
-                                                message={errors.amount}
-                                                className="mt-1.5"
-                                            />
-                                        </div>
-
-                                        <input
-                                            type="hidden"
-                                            name="payment_method"
-                                            value="wave"
-                                        />
-
-                                        <div>
-                                            <label
-                                                htmlFor="message"
-                                                className={labelClass}
-                                            >
-                                                Un mot pour eux{' '}
-                                                <span className="font-normal text-neutral-400">
-                                                    (facultatif)
-                                                </span>
-                                            </label>
-                                            <textarea
-                                                id="message"
-                                                name="message"
-                                                rows={3}
-                                                className={cn(
-                                                    fieldClass,
-                                                    'resize-none pl-4',
-                                                )}
-                                                placeholder="Votre message d’encouragement…"
-                                            />
-                                            <InputError
-                                                message={errors.message}
-                                                className="mt-1.5"
-                                            />
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-eleeo-orange to-eleeo-yellow py-4 text-sm font-semibold text-white shadow-lg shadow-eleeo-orange/25 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-60"
-                                        >
-                                            <HandHeart className="size-4" />
-                                            {processing
-                                                ? 'Envoi…'
-                                                : 'Confirmer mon don'}
-                                        </button>
-
-                                        <p className="flex items-center justify-center gap-1.5 text-xs text-neutral-500">
-                                            <ShieldCheck className="size-3.5" />
-                                            Vos informations restent privées et
-                                            ne servent qu’aux organisateurs.
-                                        </p>
-                                    </>
-                                )}
-                            </Form>
                         </div>
                     </div>
                 </section>
