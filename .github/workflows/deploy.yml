@@ -1,0 +1,106 @@
+name: deploy
+
+# Construit l'application Laravel, la compresse en zip et envoie le zip par FTPS
+# dans public_html/proect. L'extraction du zip se fait ensuite à la main
+# depuis le gestionnaire de fichiers cPanel.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'proect/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  # ftp.studiobeyam.net pointe vers ce serveur LWS. On utilise son vrai nom
+  # car le certificat TLS du FTP est émis pour web42.lws-hosting.com.
+  FTP_SERVER: web42.lws-hosting.com
+  FTP_USERNAME: deployement@studiobeyam.net
+  ZIP_NAME: eleeo-deploy.zip
+
+defaults:
+  run:
+    working-directory: proect
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: proect/package-lock.json
+
+      - name: Install PHP dependencies (production)
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+      - name: Prepare a temporary .env for the build
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build front-end assets
+        run: npm run build
+
+      - name: Create deployment zip
+        run: |
+          rm -f .env
+          zip -r -q "../${ZIP_NAME}" . \
+            -x '.git/*' \
+               '.github/*' \
+               'node_modules/*' \
+               'tests/*' \
+               'docker/*' \
+               '.env' \
+               '.env.backup' \
+               '.env.production' \
+               'compose.yaml' \
+               'phpunit.xml' \
+               '.phpunit.result.cache' \
+               'storage/logs/*.log' \
+               'database/*.sqlite*'
+          ls -lh "../${ZIP_NAME}"
+
+      - name: Upload zip via FTPS
+        env:
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          if [ -z "$FTP_PASSWORD" ]; then
+            echo "::error::Le secret FTP_PASSWORD n'est pas configuré dans le dépôt GitHub."
+            exit 1
+          fi
+          curl --fail --show-error --silent \
+            --ssl-reqd \
+            --ftp-pasv \
+            --retry 3 \
+            --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+            --upload-file "../${ZIP_NAME}" \
+            "ftp://${FTP_SERVER}/${ZIP_NAME}"
+          echo "Zip envoyé : public_html/proect/${ZIP_NAME}"
