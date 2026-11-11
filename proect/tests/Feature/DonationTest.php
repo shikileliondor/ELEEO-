@@ -11,8 +11,35 @@ test('home page shows the event details', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('welcome')
         ->where('event.contributionNumber', config('eleeo.contribution_number'))
-        ->has('paymentMethods', 3),
+        ->missing('paymentMethods'),
     );
+});
+
+test('home page provides direct Wave payment and WhatsApp contact links', function () {
+    $this->withoutVite();
+
+    config([
+        'eleeo.wave_payment_url' => 'https://pay.wave.com/m/test/c/ci/',
+        'eleeo.whatsapp_number' => '2250788758643',
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page
+        ->where('paymentLinks.wave', 'https://pay.wave.com/m/test/c/ci/')
+        ->where('paymentLinks.whatsapp', fn (string $url) => str_starts_with($url, 'https://wa.me/2250788758643?text=')
+            && str_contains(urldecode($url), 'Orange Money')
+        ),
+    );
+});
+
+test('Wave payment logo is available locally', function () {
+    expect(public_path('images/wave-logo.svg'))->toBeFile();
+});
+
+test('WhatsApp contact logo is available locally', function () {
+    expect(public_path('images/whatsapp-logo.svg'))->toBeFile();
 });
 
 test('visitors can declare a donation', function () {

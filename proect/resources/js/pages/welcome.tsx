@@ -3,7 +3,6 @@ import {
     Banknote,
     CalendarDays,
     CarTaxiFront,
-    Check,
     Copy,
     HandHeart,
     MapPin,
@@ -25,18 +24,16 @@ type Props = {
         contributionNumber: string;
         infoline: string[];
     };
-    paymentMethods: { value: string; label: string }[];
+    paymentLinks: {
+        wave: string;
+        whatsapp: string;
+    };
 };
 
 const quickAmounts = [1000, 2000, 5000, 10000, 25000, 50000];
 
 // Laisse le temps à l'écran de chargement de disparaître.
 const heroDelay = 700;
-
-const paymentStyles: Record<string, { badge: string; className: string }> = {
-    orange_money: { badge: 'OM', className: 'bg-[#ff7900] text-white' },
-    wave: { badge: 'W', className: 'bg-[#1dc3f0] text-white' },
-};
 
 const mapEmbedUrl =
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114522.9344883304!2d-4.234165602734371!3d5.433116299999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1bf0054782ae5%3A0xdae35d7ce113f8bf!2sMarch%C3%A9%20Contenaires%20de%20N'Dotr%C3%A9!5e1!3m2!1sfr!2sci!4v1793094030438!5m2!1sfr!2sci";
@@ -56,7 +53,7 @@ const fieldClass =
 
 const labelClass = 'mb-2 block text-sm font-medium text-neutral-800';
 
-export default function Welcome({ event, paymentMethods }: Props) {
+export default function Welcome({ event, paymentLinks }: Props) {
     const [amount, setAmount] = useState('');
 
     const eventDate = new Date(`${event.date}T00:00:00`);
@@ -114,15 +111,18 @@ export default function Welcome({ event, paymentMethods }: Props) {
                                 )}
                             </p>
                             <h1 className="font-serif text-4xl leading-[1.1] font-semibold sm:text-5xl">
-                                Un geste d’amour pour les enfants dans le besoin
+                                Un geste d’amour pour tous ceux qui sont dans le
+                                besoin
                             </h1>
                         </Reveal>
                         <Reveal delay={heroDelay + 150}>
                             <p className="mt-6 max-w-md text-base leading-relaxed text-neutral-600">
-                                Le {formattedDate}, nous allons à la rencontre
-                                des enfants de {event.location} avec des repas,
-                                des vêtements et des sourires. Chaque
-                                contribution, petite ou grande, compte.
+                                Le {formattedDate}, à {event.location}, nous
+                                allons à la rencontre des enfants vulnérables,
+                                des orphelins, des familles démunies et de toute
+                                personne dans le besoin, avec des repas, des
+                                vêtements et des sourires. Chaque contribution,
+                                petite ou grande, compte.
                             </p>
 
                             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -145,7 +145,7 @@ export default function Welcome({ event, paymentMethods }: Props) {
                             <blockquote className="mt-10 border-l-4 border-eleeo-orange pl-4 font-serif text-lg text-neutral-700 italic">
                                 « Heureux les miséricordieux, car ils
                                 obtiendront miséricorde. »
-                                <span className="mt-1 block font-sans text-xs tracking-[0.3em] text-neutral-500 not-italic uppercase">
+                                <span className="mt-1 block font-sans text-xs tracking-[0.3em] text-neutral-500 uppercase not-italic">
                                     Matthieu 5:7
                                 </span>
                             </blockquote>
@@ -293,8 +293,9 @@ export default function Welcome({ event, paymentMethods }: Props) {
                         </h2>
                         <p className="mt-3 text-neutral-600">
                             Un repas chaud, un vêtement propre, un moment de
-                            joie partagé : c’est ce que votre générosité
-                            apporte à ces enfants.
+                            joie partagé : c’est ce que votre générosité apporte
+                            aux enfants, aux orphelins, aux familles et à chaque
+                            personne dans le besoin.
                         </p>
                     </Reveal>
 
@@ -369,8 +370,7 @@ export default function Welcome({ event, paymentMethods }: Props) {
                         <Reveal delay={150}>
                             <div className="mt-8 rounded-3xl bg-gradient-to-br from-eleeo-navy to-eleeo-teal p-6 text-white shadow-xl">
                                 <p className="text-sm text-white/80">
-                                    Numéro pour contribution · Orange Money &
-                                    Wave
+                                    Numéro de contribution
                                 </p>
                                 <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
                                     <a
@@ -388,14 +388,48 @@ export default function Welcome({ event, paymentMethods }: Props) {
                                         Copier
                                     </button>
                                 </div>
+                                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                                    <a
+                                        href={paymentLinks.wave}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center gap-3 rounded-full bg-[#1dc3f0] px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-black/10 transition hover:brightness-105 active:scale-[0.99]"
+                                    >
+                                        <img
+                                            src="/images/wave-logo.svg"
+                                            alt=""
+                                            className="size-10 rounded-full bg-white object-cover ring-2 ring-white/40"
+                                        />
+                                        Payer avec Wave
+                                    </a>
+                                    <a
+                                        href={paymentLinks.whatsapp}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-black/10 transition hover:brightness-105 active:scale-[0.99]"
+                                    >
+                                        <img
+                                            src="/images/whatsapp-logo.svg"
+                                            alt=""
+                                            className="size-5 shrink-0"
+                                        />
+                                        Autres moyens via WhatsApp
+                                    </a>
+                                </div>
+                                <p className="mt-4 text-xs leading-relaxed text-white/75">
+                                    Wave est le seul paiement direct en ligne.
+                                    Pour Orange Money ou un autre moyen,
+                                    contactez-nous sur WhatsApp.
+                                </p>
                             </div>
                         </Reveal>
 
                         <div className="mt-8 space-y-5">
                             {[
-                                'Envoyez votre contribution par Orange Money ou Wave au numéro ci-dessus.',
-                                'Remplissez le formulaire pour que l’équipe puisse vous remercier.',
-                                `Le ${formattedDate}, votre don devient repas et sourires à ${event.location}.`,
+                                'Payez directement avec Wave en cliquant sur le bouton bleu.',
+                                'Pour Orange Money ou un autre moyen, contactez-nous via WhatsApp.',
+                                'Après votre paiement, remplissez le formulaire pour que l’équipe puisse vous remercier.',
+                                `Le ${formattedDate}, votre don devient repas et sourires pour tous ceux qui en ont besoin à ${event.location}.`,
                             ].map((step, index) => (
                                 <Reveal key={step} delay={250 + index * 120}>
                                     <div className="flex gap-4">
@@ -412,7 +446,7 @@ export default function Welcome({ event, paymentMethods }: Props) {
                     </div>
 
                     {/* Formulaire (sans animation d'apparition) */}
-                    <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-neutral-300/40 ring-1 ring-neutral-100">
+                    <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 shadow-neutral-300/40 ring-neutral-100">
                         <div className="h-1.5 bg-gradient-to-r from-eleeo-orange via-eleeo-yellow to-eleeo-teal" />
                         <div className="p-5 sm:p-9">
                             <div className="flex items-start gap-4">
@@ -560,55 +594,24 @@ export default function Welcome({ event, paymentMethods }: Props) {
                                             <legend className={labelClass}>
                                                 Moyen de paiement
                                             </legend>
-                                            <div className="grid gap-2 sm:grid-cols-3">
-                                                {paymentMethods.map(
-                                                    (method) => {
-                                                        const style =
-                                                            paymentStyles[
-                                                                method.value
-                                                            ];
-
-                                                        return (
-                                                            <label
-                                                                key={
-                                                                    method.value
-                                                                }
-                                                                className="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-neutral-200 p-3 text-sm font-medium transition hover:border-eleeo-teal/60 has-checked:border-eleeo-teal has-checked:bg-eleeo-teal/5 has-focus-visible:ring-4 has-focus-visible:ring-eleeo-teal/10"
-                                                            >
-                                                                <input
-                                                                    type="radio"
-                                                                    name="payment_method"
-                                                                    value={
-                                                                        method.value
-                                                                    }
-                                                                    required
-                                                                    className="peer sr-only"
-                                                                />
-                                                                <span
-                                                                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
-                                                                        style?.className ??
-                                                                        'bg-neutral-100 text-neutral-600'
-                                                                    }`}
-                                                                >
-                                                                    {style?.badge ?? (
-                                                                        <Banknote className="size-4" />
-                                                                    )}
-                                                                </span>
-                                                                <span className="leading-tight">
-                                                                    {
-                                                                        method.label
-                                                                    }
-                                                                </span>
-                                                                <Check className="absolute top-2 right-2 size-3.5 text-eleeo-teal opacity-0 transition peer-checked:opacity-100" />
-                                                            </label>
-                                                        );
-                                                    },
-                                                )}
-                                            </div>
-                                            <InputError
-                                                message={errors.payment_method}
-                                                className="mt-1.5"
+                                            <input
+                                                type="hidden"
+                                                name="payment_method"
+                                                value="wave"
                                             />
+                                            <a
+                                                href={paymentLinks.wave}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#1dc3f0] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-[#1dc3f0]/25 transition hover:brightness-105 focus-visible:ring-4 focus-visible:ring-[#1dc3f0]/30 focus-visible:outline-none active:scale-[0.99]"
+                                            >
+                                                <img
+                                                    src="/images/wave-logo.svg"
+                                                    alt=""
+                                                    className="size-11 rounded-full bg-white object-cover ring-2 ring-white/40"
+                                                />
+                                                Payer avec Wave
+                                            </a>
                                         </fieldset>
 
                                         <div>
@@ -616,7 +619,7 @@ export default function Welcome({ event, paymentMethods }: Props) {
                                                 htmlFor="message"
                                                 className={labelClass}
                                             >
-                                                Un mot pour les enfants{' '}
+                                                Un mot pour eux{' '}
                                                 <span className="font-normal text-neutral-400">
                                                     (facultatif)
                                                 </span>

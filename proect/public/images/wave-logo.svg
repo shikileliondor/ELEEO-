@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+    <title id="title">Wave</title>
+    <circle cx="256" cy="256" r="252" fill="#1dc3f0" />
+    <path d="M191 147c-20-30-42-43-60-29-24 19-12 49 13 76l45 44z" fill="#11110f" />
+    <path d="M194 72c13-43 106-44 122 1 19 56 30 163 14 219-10 36-36 56-75 56-40 0-68-21-77-59-13-57 0-168 16-217z" fill="#11110f" />
+    <ellipse cx="255" cy="236" rx="53" ry="77" fill="#fff" />
+    <circle cx="229" cy="101" r="9" fill="#fff" />
+    <circle cx="277" cy="101" r="9" fill="#fff" />
+    <path d="M224 128c21-11 40-11 62 0-15 21-45 21-62 0z" fill="#ff7815" />
+    <path d="M175 339c4-30 23-49 48-49 25 0 43 21 45 49z" fill="#f57b1d" />
+    <path d="M247 339c4-30 22-49 47-49 25 0 44 20 47 49z" fill="#f57b1d" />
+    <text x="256" y="440" fill="#fff" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="105" font-weight="700" text-anchor="middle" letter-spacing="-8">wave</text>
+</svg>
