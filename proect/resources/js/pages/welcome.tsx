@@ -416,20 +416,14 @@ export default function Welcome({ event, paymentLinks }: Props) {
                                         Autres moyens via WhatsApp
                                     </a>
                                 </div>
-                                <p className="mt-4 text-xs leading-relaxed text-white/75">
-                                    Wave est le seul paiement direct en ligne.
-                                    Pour Orange Money ou un autre moyen,
-                                    contactez-nous sur WhatsApp.
-                                </p>
                             </div>
                         </Reveal>
 
                         <div className="mt-8 space-y-5">
                             {[
-                                'Payez directement avec Wave en cliquant sur le bouton bleu.',
-                                'Pour Orange Money ou un autre moyen, contactez-nous via WhatsApp.',
-                                'Après votre paiement, remplissez le formulaire pour que l’équipe puisse vous remercier.',
-                                `Le ${formattedDate}, votre don devient repas et sourires pour tous ceux qui en ont besoin à ${event.location}.`,
+                                'Payez avec Wave, ou écrivez-nous sur WhatsApp pour Orange Money.',
+                                'Remplissez le formulaire pour que l’équipe puisse vous remercier.',
+                                `Le ${formattedDate}, votre don devient repas et sourires pour ceux qui en ont besoin.`,
                             ].map((step, index) => (
                                 <Reveal key={step} delay={250 + index * 120}>
                                     <div className="flex gap-4">
@@ -458,8 +452,8 @@ export default function Welcome({ event, paymentLinks }: Props) {
                                         J’ai fait un don
                                     </h3>
                                     <p className="mt-1 text-sm text-neutral-500">
-                                        Signalez votre contribution, l’équipe
-                                        vous recontactera pour vous remercier.
+                                        Après votre paiement, laissez-nous vos
+                                        coordonnées.
                                     </p>
                                 </div>
                             </div>
@@ -590,29 +584,11 @@ export default function Welcome({ event, paymentLinks }: Props) {
                                             />
                                         </div>
 
-                                        <fieldset>
-                                            <legend className={labelClass}>
-                                                Moyen de paiement
-                                            </legend>
-                                            <input
-                                                type="hidden"
-                                                name="payment_method"
-                                                value="wave"
-                                            />
-                                            <a
-                                                href={paymentLinks.wave}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#1dc3f0] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-[#1dc3f0]/25 transition hover:brightness-105 focus-visible:ring-4 focus-visible:ring-[#1dc3f0]/30 focus-visible:outline-none active:scale-[0.99]"
-                                            >
-                                                <img
-                                                    src="/images/wave-logo.svg"
-                                                    alt=""
-                                                    className="size-11 rounded-full bg-white object-cover ring-2 ring-white/40"
-                                                />
-                                                Payer avec Wave
-                                            </a>
-                                        </fieldset>
+                                        <input
+                                            type="hidden"
+                                            name="payment_method"
+                                            value="wave"
+                                        />
 
                                         <div>
                                             <label
