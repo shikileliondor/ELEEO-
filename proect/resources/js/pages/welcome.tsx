@@ -26,6 +26,107 @@ type Props = {
 // Laisse le temps à l'écran de chargement de disparaître.
 const heroDelay = 700;
 
+type GalleryPhoto = {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+};
+
+// Les photos du dossier galerie/ viennent d'Unsplash (licence libre) et
+// illustrent l'œuvre : ce ne sont pas des bénéficiaires de l'événement.
+const galleryPhotos: GalleryPhoto[] = [
+    {
+        src: '/images/enfant-pain.jpg',
+        alt: 'Une fillette souriante tient des baguettes de pain',
+        width: 302,
+        height: 462,
+        caption: 'Nourrir',
+    },
+    {
+        src: '/images/galerie/distribution-repas.jpg',
+        alt: 'Des enfants reçoivent une assiette de nourriture lors d’une distribution',
+        width: 900,
+        height: 600,
+    },
+    {
+        src: '/images/galerie/grand-mere-sourire.jpg',
+        alt: 'Une grand-mère souriante, coiffée d’un foulard, lève le pouce',
+        width: 900,
+        height: 1260,
+        caption: 'Soutenir',
+    },
+    {
+        src: '/images/galerie/maman-enfant.jpg',
+        alt: 'Une maman et son petit garçon échangent un sourire',
+        width: 900,
+        height: 575,
+    },
+    {
+        src: '/images/enfants-joie.jpg',
+        alt: 'Un groupe d’enfants joyeux salue la caméra',
+        width: 640,
+        height: 640,
+        caption: 'Rassembler',
+    },
+    {
+        src: '/images/galerie/maman-bebe-village.jpg',
+        alt: 'Une maman assise tient son bébé dans ses bras devant sa maison',
+        width: 900,
+        height: 1350,
+    },
+    {
+        src: '/images/galerie/rue-village.jpg',
+        alt: 'Une femme et des enfants marchent dans une rue de village',
+        width: 900,
+        height: 600,
+    },
+    {
+        src: '/images/galerie/maman-bebe-dos.jpg',
+        alt: 'Une maman porte son bébé au dos dans un champ',
+        width: 900,
+        height: 600,
+    },
+    {
+        src: '/images/enfant-pensif.jpg',
+        alt: 'Portrait d’un enfant pensif',
+        width: 302,
+        height: 462,
+    },
+    {
+        src: '/images/galerie/enfants-repas-partage.jpg',
+        alt: 'Des enfants assis en cercle partagent un repas',
+        width: 900,
+        height: 675,
+        caption: 'Partager',
+    },
+    {
+        src: '/images/galerie/grand-pere.jpg',
+        alt: 'Portrait d’un grand-père en tenue traditionnelle',
+        width: 900,
+        height: 1347,
+    },
+    {
+        src: '/images/enfant-repas.jpg',
+        alt: 'Un garçon reçoit un repas',
+        width: 302,
+        height: 462,
+    },
+    {
+        src: '/images/galerie/enfants-nourriture.jpg',
+        alt: 'Des enfants attendent devant un panier de nourriture',
+        width: 900,
+        height: 1350,
+    },
+    {
+        src: '/images/enfants-groupe.jpg',
+        alt: 'Des enfants souriants font des signes de la main',
+        width: 900,
+        height: 683,
+    },
+];
+
 const mapEmbedUrl =
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114522.9344883304!2d-4.234165602734371!3d5.433116299999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1bf0054782ae5%3A0xdae35d7ce113f8bf!2sMarch%C3%A9%20Contenaires%20de%20N'Dotr%C3%A9!5e1!3m2!1sfr!2sci!4v1793094030438!5m2!1sfr!2sci";
 
@@ -280,47 +381,23 @@ export default function Welcome({ event, paymentLinks }: Props) {
                         </p>
                     </Reveal>
 
-                    <div className="grid auto-rows-[11rem] grid-cols-2 gap-3 sm:gap-4 md:h-[34rem] md:auto-rows-auto md:grid-cols-4 md:grid-rows-2">
-                        {[
-                            {
-                                src: '/images/enfant-pain.jpg',
-                                alt: 'Une fillette souriante tient des baguettes de pain',
-                                caption: 'Nourrir',
-                                className: 'row-span-2',
-                            },
-                            {
-                                src: '/images/enfants-joie.jpg',
-                                alt: 'Un groupe d’enfants joyeux salue la caméra',
-                                caption: 'Rassembler',
-                                className: 'md:col-span-2',
-                            },
-                            {
-                                src: '/images/enfant-pensif.jpg',
-                                alt: 'Portrait d’un enfant pensif',
-                                className: 'row-span-2 md:col-start-4',
-                            },
-                            {
-                                src: '/images/enfant-repas.jpg',
-                                alt: 'Un garçon reçoit un repas',
-                                caption: 'Partager',
-                            },
-                            {
-                                src: '/images/enfants-groupe.jpg',
-                                alt: 'Des enfants souriants font des signes de la main',
-                                className: 'col-span-2 md:col-span-1',
-                            },
-                        ].map((photo, index) => (
+                    {/* Mosaïque : chaque photo garde ses proportions. */}
+                    <div className="columns-2 gap-3 sm:gap-4 md:columns-3 lg:columns-4">
+                        {galleryPhotos.map((photo, index) => (
                             <Reveal
                                 key={photo.src}
-                                delay={index * 100}
-                                className={photo.className}
+                                delay={(index % 4) * 100}
+                                className="mb-3 break-inside-avoid sm:mb-4"
                             >
-                                <figure className="group relative size-full overflow-hidden rounded-3xl bg-neutral-200">
+                                <figure className="group relative overflow-hidden rounded-3xl bg-neutral-200">
                                     <img
                                         src={photo.src}
                                         alt={photo.alt}
+                                        width={photo.width}
+                                        height={photo.height}
                                         loading="lazy"
-                                        className="size-full object-cover transition duration-700 ease-out group-hover:scale-105"
+                                        decoding="async"
+                                        className="block h-auto w-full transition duration-700 ease-out group-hover:scale-105"
                                     />
                                     {photo.caption && (
                                         <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-12 font-serif text-lg font-semibold text-white">
